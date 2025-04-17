@@ -1,0 +1,13 @@
+{
+  "extends": [
+    "@rocketseat/eslint-config/react",
+    "plugin:storybook/recommended",
+    "plugin:storybook/recommended"
+  ],
+  "plugins": [
+    "simple-import-sort"
+  ],
+  "rules": {
+    "simple-import-sort/imports": "error"
+  }
+}
