@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@theme {
+  --font-inter: "Inter", sans-serif;
+  --font-roboto: "Roboto", sans-serif;
+  --font-nunito: "Nunito", sans-serif;
+}
+
 body {
-  @apply bg-gray-200
+  @apply bg-gray-200 font-nunito 
 }
