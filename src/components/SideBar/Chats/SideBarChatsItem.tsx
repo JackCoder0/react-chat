@@ -1,4 +1,4 @@
-import { collection, query, where } from 'firebase/firestore'
+import { collection, limit, orderBy, query, where } from 'firebase/firestore'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { MdPerson } from 'react-icons/md'
 
@@ -19,6 +19,7 @@ export function SidebarChatsItem({
   setUserChat,
   active,
 }: SidebarChatsItemProps) {
+  // Função para pegar o email do outro usuário
   const getUser = (
     users: string[],
     userLogged: { email: string | null },
@@ -27,13 +28,29 @@ export function SidebarChatsItem({
 
   const userEmail = getUser(users, user)
 
+  // Consulta para pegar o usuário do chat
   const userQuery =
     userEmail && query(collection(db, 'users'), where('email', '==', userEmail))
 
   const [getUserItem] = useCollection(userQuery || undefined)
 
   const Avatar = getUserItem?.docs?.[0]?.data()
-  // const item = getUser(users, user)
+
+  // Consulta para pegar as mensagens do chat ordenadas pela data de envio
+  const messagesQuery = query(
+    collection(db, 'chats', id, 'messages'),
+    orderBy('timestamp', 'desc'),
+    limit(1), // Pega apenas a última mensagem
+  )
+
+  const [messages] = useCollection(messagesQuery)
+
+  const lastMessage = messages?.docs?.[0]?.data()
+
+  const whoSent =
+    lastMessage?.user === user.email
+      ? 'Você'
+      : Avatar?.displayName || 'Outro Usuário'
 
   const handleNewChat = () => {
     const userChat = {
@@ -47,19 +64,34 @@ export function SidebarChatsItem({
 
   return (
     <div
-      className={`flex cursor-pointer items-center justify-start gap-2 rounded-md px-5 py-4 ${active}`}
+      className={`flex cursor-pointer items-center justify-start gap-5 rounded-md px-5 py-4 ${active}`}
       onClick={handleNewChat}
     >
       {Avatar ? (
         <img
-          className="h-9 w-9 cursor-pointer rounded-full"
+          className="h-15 w-15 cursor-pointer rounded-full"
           src={Avatar?.photoURL || undefined}
           alt="user photo"
         />
       ) : (
-        <MdPerson />
+        <div className="flex h-15 w-15 items-center justify-center rounded-full bg-gray-500">
+          <MdPerson size={50} />
+        </div>
       )}
-      <span className="text-sm font-medium">{Avatar?.displayName}</span>
+
+      <div>
+        <span className="text-lg font-medium">
+          {Avatar?.displayName ? Avatar?.displayName : 'Sem nome'}
+        </span>
+
+        {lastMessage ? (
+          <p className="truncate text-gray-500">
+            <strong>{whoSent}:</strong> {lastMessage?.message}
+          </p>
+        ) : (
+          <p className="truncate text-gray-500">Sem mensagens</p>
+        )}
+      </div>
     </div>
   )
 }

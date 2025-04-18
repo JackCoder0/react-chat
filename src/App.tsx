@@ -34,7 +34,7 @@ export function App() {
         <h1 className="text-4xl font-bold uppercase">Tela Principal</h1>
       </div> */}
 
-      <Test />
+      <Test setUserChat={setUserChat} userChat={userChat} />
 
       <SideBar setUserChat={setUserChat} userChat={userChat} />
       <Chat userChat={userChat} />
