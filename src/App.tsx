@@ -6,6 +6,7 @@ import { Chat } from './components/Chat/Chat'
 import { Loading } from './components/Loading'
 import { Login } from './components/Login'
 import { SideBar } from './components/SideBar/SideBar'
+import { Test } from './components/Test'
 import { auth, db } from './lib/firebase'
 
 export function App() {
@@ -29,9 +30,12 @@ export function App() {
 
   return (
     <div className="flex h-screen w-full">
-      {/* <div className="flex h-screen w-full items-center justify-center">
+      {/* <div className="flex w-full items-center justify-center">
         <h1 className="text-4xl font-bold uppercase">Tela Principal</h1>
       </div> */}
+
+      <Test />
+
       <SideBar setUserChat={setUserChat} userChat={userChat} />
       <Chat userChat={userChat} />
     </div>
