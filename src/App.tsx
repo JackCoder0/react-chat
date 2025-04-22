@@ -30,10 +30,6 @@ export function App() {
 
   return (
     <div className="flex h-screen w-full">
-      {/* <div className="flex w-full items-center justify-center">
-        <h1 className="text-4xl font-bold uppercase">Tela Principal</h1>
-      </div> */}
-
       <Test setUserChat={setUserChat} userChat={userChat} />
 
       <SideBar setUserChat={setUserChat} userChat={userChat} />

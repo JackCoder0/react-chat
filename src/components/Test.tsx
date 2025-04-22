@@ -1,6 +1,6 @@
 import * as EmailValidator from 'email-validator'
 import { addDoc, collection, query, where } from 'firebase/firestore'
-import { ChevronDown, ChevronUp, SquarePen } from 'lucide-react'
+import { ChevronDown, ChevronLeft, ChevronUp, SquarePen } from 'lucide-react'
 import { useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useCollection } from 'react-firebase-hooks/firestore'
@@ -8,7 +8,9 @@ import { useCollection } from 'react-firebase-hooks/firestore'
 import { auth, db } from '@/lib/firebase'
 
 import { AvatarPhoto } from './Avatar'
-import { SideBarChats } from './SideBar/Chats/SideBarChats'
+import { ChatFooter } from './Chat/ChatFooter'
+import { TestChat } from './TestChat'
+import { TestChats } from './TestChats'
 
 interface TestProps {
   setUserChat: (userChat: any) => void
@@ -17,6 +19,13 @@ interface TestProps {
 
 export function Test({ setUserChat, userChat }: TestProps) {
   const [user] = useAuthState(auth)
+
+  const [view, setView] = useState<'list' | 'chat'>('list')
+
+  const handleSelectChat = (chat: any) => {
+    setUserChat(chat)
+    setView('chat')
+  }
 
   const [isOpen, setIsOpen] = useState(() => {
     // Recupera estado do localStorage ao iniciar
@@ -64,17 +73,40 @@ export function Test({ setUserChat, userChat }: TestProps) {
     })
   }
 
+  const handleBackToMessages = () => {
+    setUserChat(null) // Limpa o chat selecionado
+    setView('list') // Volta para a visualização de lista
+  }
+
   return (
     <div
-      className={`fixed right-0 bottom-0 z-50 max-h-[90%] w-[430px] rounded-tl-md bg-gray-100 text-white shadow-xl transition-all duration-300 ${isOpen ? 'h-[70%]' : 'h-[50px]'}`}
+      className={`fixed right-0 bottom-0 z-50 w-[430px] rounded-tl-md bg-gray-100 text-white shadow-xl transition-all duration-300 ${
+        isOpen ? 'h-[70vh]' : 'h-[50px]'
+      } flex flex-col`}
     >
       <div
         className="flex cursor-pointer items-center justify-between rounded-tl-md bg-blue-400 p-2 hover:bg-blue-600"
         onClick={togglePanel}
       >
         <div className="flex items-center gap-2">
-          <AvatarPhoto src={user?.photoURL || ''} />
-          <p className="font-bold">Mensagens</p>
+          {/* Botão de Voltar (só aparece se estiver na view do chat) */}
+          {view === 'chat' && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation() // impede de fechar o painel
+                handleBackToMessages()
+              }}
+              className="cursor-pointer"
+            >
+              <ChevronLeft size={24} />
+            </button>
+          )}
+
+          <AvatarPhoto
+            src={userChat ? userChat.photoURL : user?.photoURL || ''}
+          />
+
+          <p className="font-bold">{userChat ? userChat.name : 'Mensagens'}</p>
         </div>
 
         <div className="flex items-center gap-2">
@@ -83,14 +115,26 @@ export function Test({ setUserChat, userChat }: TestProps) {
             className="cursor-pointer"
             onClick={handleCreateChat}
           />
+
           {isOpen ? <ChevronDown size={24} /> : <ChevronUp size={24} />}
         </div>
       </div>
 
       {/* Conteúdo do painel */}
       {isOpen && (
-        <div className="h-full overflow-y-auto p-4">
-          <SideBarChats setUserChat={setUserChat} userChat={userChat} />
+        <div className="flex flex-1 flex-col overflow-hidden">
+          {view === 'list' && (
+            <TestChats setUserChat={handleSelectChat} userChat={userChat} />
+          )}
+
+          {view === 'chat' && userChat?.chatId && (
+            <div className="flex h-full flex-col">
+              <div className="flex-1 overflow-y-auto pr-1">
+                <TestChat chatId={userChat.chatId} />
+              </div>
+              <ChatFooter chatId={userChat.chatId} />
+            </div>
+          )}
         </div>
       )}
     </div>
