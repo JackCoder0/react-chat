@@ -7,6 +7,7 @@ import { useCollection } from 'react-firebase-hooks/firestore'
 
 import { auth, db } from '@/lib/firebase'
 
+import { AvatarPhoto } from './Avatar'
 import { SideBarChats } from './SideBar/Chats/SideBarChats'
 
 interface TestProps {
@@ -65,18 +66,14 @@ export function Test({ setUserChat, userChat }: TestProps) {
 
   return (
     <div
-      className={`fixed right-0 bottom-0 z-50 max-h-[90%] w-[430px] rounded-tl-md bg-red-500 text-white shadow-xl transition-all duration-300 ${isOpen ? 'h-[70%]' : 'h-[50px]'}`}
+      className={`fixed right-0 bottom-0 z-50 max-h-[90%] w-[430px] rounded-tl-md bg-gray-100 text-white shadow-xl transition-all duration-300 ${isOpen ? 'h-[70%]' : 'h-[50px]'}`}
     >
       <div
-        className="flex cursor-pointer items-center justify-between rounded-tl-md bg-red-600 p-2 hover:bg-red-700"
+        className="flex cursor-pointer items-center justify-between rounded-tl-md bg-blue-400 p-2 hover:bg-blue-600"
         onClick={togglePanel}
       >
         <div className="flex items-center gap-2">
-          <img
-            className="h-9 w-9 rounded-full"
-            src={user?.photoURL || undefined}
-            alt="user photo"
-          />
+          <AvatarPhoto src={user?.photoURL || ''} />
           <p className="font-bold">Mensagens</p>
         </div>
 

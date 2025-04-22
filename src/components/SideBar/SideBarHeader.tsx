@@ -6,6 +6,8 @@ import { MdChat, MdDonutLarge, MdMoreVert } from 'react-icons/md'
 
 import { auth, db } from '@/lib/firebase'
 
+import { AvatarPhoto } from '../Avatar'
+
 interface SideBarHeaderProps {
   setUserChat: (userChat: any) => void
 }
@@ -48,12 +50,11 @@ export function SideBarHeader({ setUserChat }: SideBarHeaderProps) {
   return (
     <div className="mb-1.5 flex h-14 items-center justify-between bg-[#f0f2f5] px-4 py-2.5">
       <div className="flex items-center gap-2.5">
-        <img
-          className="h-9 w-9 cursor-pointer rounded-full"
-          src={user?.photoURL || undefined}
-          alt="user photo"
+        <AvatarPhoto
+          src={user?.photoURL || ''}
           onClick={() => [auth.signOut(), setUserChat(null)]}
         />
+
         <p>{user?.displayName}</p>
       </div>
       <div className="flex gap-2.5">

@@ -2,6 +2,7 @@ import { collection, limit, orderBy, query, where } from 'firebase/firestore'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { MdPerson } from 'react-icons/md'
 
+import { AvatarPhoto } from '@/components/Avatar'
 import { db } from '@/lib/firebase'
 
 interface SidebarChatsItemProps {
@@ -68,11 +69,7 @@ export function SidebarChatsItem({
       onClick={handleNewChat}
     >
       {Avatar ? (
-        <img
-          className="h-15 w-15 cursor-pointer rounded-full"
-          src={Avatar?.photoURL || undefined}
-          alt="user photo"
-        />
+        <AvatarPhoto src={Avatar?.photoURL || ''} className="h-15 w-15" />
       ) : (
         <div className="flex h-15 w-15 items-center justify-center rounded-full bg-gray-500">
           <MdPerson size={50} />
@@ -80,7 +77,7 @@ export function SidebarChatsItem({
       )}
 
       <div>
-        <span className="text-lg font-medium">
+        <span className="text-lg font-medium text-black">
           {Avatar?.displayName ? Avatar?.displayName : 'Sem nome'}
         </span>
 

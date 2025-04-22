@@ -2,6 +2,8 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 
 import { auth } from '@/lib/firebase'
 
+import { AvatarPhoto } from '../Avatar'
+
 interface MessageProps {
   user: string
   name?: string
@@ -22,13 +24,7 @@ export function Message({ user, name, photoURL, message }: MessageProps) {
       className={`m-2.5 flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}
     >
       <div className="flex max-w-[80%] items-end gap-2">
-        {!isCurrentUser && photoURL && (
-          <img
-            src={photoURL}
-            alt={name}
-            className="h-8 w-8 rounded-full object-cover"
-          />
-        )}
+        {!isCurrentUser && photoURL && <AvatarPhoto src={photoURL || ''} />}
         <div
           className={`flex flex-col rounded-xl p-2 font-bold ${isCurrentUser ? 'bg-green-500 text-white' : 'bg-white text-black'}`}
         >
